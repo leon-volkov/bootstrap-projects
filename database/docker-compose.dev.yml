@@ -1,0 +1,14 @@
+version: "3.3"
+
+services:
+
+  database:
+    image: myproject-database-image
+    container_name: myproject-database-container
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    env_file:
+      - ./env/.dev.env
+    ports:
+      - "5432:5432" # specify port fordwarding

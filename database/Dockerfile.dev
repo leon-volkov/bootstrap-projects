@@ -1,0 +1,21 @@
+FROM postgres:14-alpine
+
+# Enable remote connections to the database
+ADD 1-setup-remote-connections.sh /docker-entrypoint-initdb.d
+RUN chmod 755 /docker-entrypoint-initdb.d/1-setup-remote-connections.sh
+
+# Create role DB_USER, database DB_NAME, assign priviledges
+ADD 2-create-database.sh /docker-entrypoint-initdb.d
+RUN chmod 755 /docker-entrypoint-initdb.d/2-create-database.sh
+
+# Create tables and fixed data
+ADD 3-schema.sql /usr
+RUN chmod 755 /usr/3-schema.sql
+ADD 4-setup-database.sh /docker-entrypoint-initdb.d
+RUN chmod 755 /docker-entrypoint-initdb.d/4-setup-database.sh
+
+# Add development data
+ADD 5-development-data.sql /usr
+RUN chmod 755 /usr/5-development-data.sql
+ADD 6-add-dev-data.sh /docker-entrypoint-initdb.d
+RUN chmod 755 /docker-entrypoint-initdb.d/6-add-dev-data.sh
